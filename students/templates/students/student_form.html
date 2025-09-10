@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if object %}Editar{% else %}Crear{% endif %} Estudiante - Student Management{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow">
+    <div class="px-6 py-4 border-b border-gray-200">
+        <h1 class="text-2xl font-bold text-gray-900">
+            <i class="fas fa-{% if object %}edit{% else %}plus{% endif %} mr-2"></i>
+            {% if object %}Editar Estudiante{% else %}Crear Nuevo Estudiante{% endif %}
+        </h1>
+    </div>
+
+    <form method="post" class="px-6 py-4">
+        {% csrf_token %}
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- First Name -->
+            <div>
+                <label for="id_first_name" class="block text-sm font-medium text-gray-700 mb-2">Nombres</label>
+                <input type="text" name="first_name" id="id_first_name" value="{% if object %}{{ object.first_name }}{% endif %}" 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+
+            <!-- Last Name -->
+            <div>
+                <label for="id_last_name" class="block text-sm font-medium text-gray-700 mb-2">Apellidos</label>
+                <input type="text" name="last_name" id="id_last_name" value="{% if object %}{{ object.last_name }}{% endif %}" 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label for="id_email" class="block text-sm font-medium text-gray-700 mb-2">Correo Electrónico</label>
+                <input type="email" name="email" id="id_email" value="{% if object %}{{ object.email }}{% endif %}" 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+
+            <!-- Student ID -->
+            <div>
+                <label for="id_student_id" class="block text-sm font-medium text-gray-700 mb-2">Código de Estudiante</label>
+                <input type="text" name="student_id" id="id_student_id" value="{% if object %}{{ object.student_id }}{% endif %}" 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+
+            <!-- Career -->
+            <div>
+                <label for="id_career" class="block text-sm font-medium text-gray-700 mb-2">Carrera</label>
+                <select name="career" id="id_career" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <option value="">Seleccionar carrera</option>
+                    <option value="sistemas" {% if object and object.career == 'sistemas' %}selected{% endif %}>Sistemas de Información</option>
+                    <option value="software" {% if object and object.career == 'software' %}selected{% endif %}>Desarrollo de Software</option>
+                    <option value="redes" {% if object and object.career == 'redes' %}selected{% endif %}>Redes y Comunicaciones</option>
+                    <option value="industrial" {% if object and object.career == 'industrial' %}selected{% endif %}>Ingeniería Industrial</option>
+                    <option value="mecanica" {% if object and object.career == 'mecanica' %}selected{% endif %}>Ingeniería Mecánica</option>
+                </select>
+            </div>
+
+            <!-- Semester -->
+            <div>
+                <label for="id_semester" class="block text-sm font-medium text-gray-700 mb-2">Semestre</label>
+                <select name="semester" id="id_semester" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <option value="">Seleccionar semestre</option>
+                    <option value="1" {% if object and object.semester == 1 %}selected{% endif %}>Primer Semestre</option>
+                    <option value="2" {% if object and object.semester == 2 %}selected{% endif %}>Segundo Semestre</option>
+                    <option value="3" {% if object and object.semester == 3 %}selected{% endif %}>Tercer Semestre</option>
+                    <option value="4" {% if object and object.semester == 4 %}selected{% endif %}>Cuarto Semestre</option>
+                    <option value="5" {% if object and object.semester == 5 %}selected{% endif %}>Quinto Semestre</option>
+                    <option value="6" {% if object and object.semester == 6 %}selected{% endif %}>Sexto Semestre</option>
+                </select>
+            </div>
+
+            <!-- Phone -->
+            <div>
+                <label for="id_phone" class="block text-sm font-medium text-gray-700 mb-2">Teléfono</label>
+                <input type="text" name="phone" id="id_phone" value="{% if object %}{{ object.phone }}{% endif %}" 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <!-- Birth Date -->
+            <div>
+                <label for="id_birth_date" class="block text-sm font-medium text-gray-700 mb-2">Fecha de Nacimiento</label>
+                <input type="date" name="birth_date" id="id_birth_date" value="{% if object %}{{ object.birth_date|date:'Y-m-d' }}{% endif %}" 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+
+            {% if object %}
+            <!-- Is Active (only for edit) -->
+            <div class="md:col-span-2">
+                <div class="flex items-center">
+                    <input type="checkbox" name="is_active" id="id_is_active" {% if object.is_active %}checked{% endif %} 
+                           class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                    <label for="id_is_active" class="ml-2 block text-sm text-gray-900">Estudiante activo</label>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="mt-6 flex justify-end space-x-3">
+            <a href="{% url 'student_list' %}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md">
+                <i class="fas fa-times mr-1"></i>Cancelar
+            </a>
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">
+                <i class="fas fa-save mr-1"></i>
+                {% if object %}Actualizar{% else %}Crear{% endif %} Estudiante
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
